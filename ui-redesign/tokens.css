@@ -1,0 +1,217 @@
+/* ============================================================
+   小丸工具箱 · 设计令牌（唯一真值来源）
+   密度基准：固定窗口 1000×780（实测下限 960×780，取 1000 留余量）
+   目标：该尺寸下所有功能一屏可见，无滚动、无裁切。
+   规则：组件不得写死颜色/间距/圆角/字号，一律引用本文件变量。
+   间距只用 4 的倍数梯度，禁止 6/7/10/14/18 这类游离值。
+   ============================================================ */
+
+:root {
+  /* ---------- 间距梯度（8 级，全部 4 的倍数） ---------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+
+  /* 语义别名（已按"一屏可见"收紧，比通用设计系统紧一档） */
+  --gap-grid: var(--s-2);     /* 8  同行控件之间 */
+  --gap-stack: var(--s-2);    /* 8  卡片内纵向堆叠 */
+  --gap-block: var(--s-2);    /* 8  卡片内分组之间 */
+  --gap-card: var(--s-2);     /* 8  卡片之间 */
+  --pad-card: var(--s-3);     /* 12 卡片内边距 */
+  --pad-control: var(--s-2);  /* 8  控件内边距 */
+
+  /* ---------- 圆角（4 级 + 药丸） ---------- */
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-pill: 999px;
+
+  /* ---------- 控件高度（5 级，保证同行控件严格等高） ---------- */
+  --h-xs: 22px;   /* 徽标 */
+  --h-sm: 26px;   /* 次级按钮、缩放 */
+  --h-md: 30px;   /* 输入框、分段控件、选项网格 */
+  --h-lg: 38px;   /* 卡片内主按钮 */
+  --h-xl: 44px;   /* 页面主 CTA */
+  /* 分段/选项网格里的 chip：外框 30 - 2×2 内边距 - 2 边框 = 24。
+     两者必须引用同一个值，否则又会出现一方圆角一方直角的不一致。 */
+  --chip-h: 24px;
+  /* chip 内联左右留白。用 3px 而不是 --s-1(4px)：压窄后 4px 会让
+     「高画质」「竖1440」这类较长标签差 2~3px 放不下。属于文字内衬，
+     不是元素间距，所以不占 4 的倍数梯度。 */
+  --pad-chip: 3px;
+
+  /* ---------- 字号（7 级） ---------- */
+  --f-2xs: 10px;
+  --f-xs: 10.5px;
+  --f-sm: 11px;
+  --f-md: 12px;
+  --f-base: 13px;
+  --f-lg: 14px;
+  --f-xl: 15px;
+  --f-2xl: 17px;
+
+  --lh-tight: 1.3;
+  --lh-body: 1.6;
+
+  /* 字重只用 3 档，避免随意加粗 */
+  --w-normal: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+
+  /* ---------- 字体族 ---------- */
+  --font-ui: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, "Sarasa Mono SC", ui-monospace, monospace;
+
+  /* ---------- 布局骨架（按 1320 宽反推） ---------- */
+  --topbar-h: 44px;
+  --nav-h: 40px;
+  /* 固定窗口 1000×780。两列设置栏各 280，主区拿到剩下的 ~370：
+     280 是实测下限——再窄「NVIDIA」在厂商分段里就放不下（需要 252 > 236）。 */
+  --rail-a-w: 280px;   /* 设置栏第一列：编码器 + 画质 + CTA */
+  --rail-b-w: 280px;   /* 设置栏第二列：输出规格 + 画面调整 */
+  --rail-w: 280px;     /* 双栏视图（任务/环境）用 */
+  --page-pad: var(--s-3);
+  --page-max: 1800px;
+
+  /* ---------- 动效（生产力工具：只用一档时长） ---------- */
+  --dur: 120ms;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* ---------- 阴影（仅浮层使用，卡片靠边框分层） ---------- */
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  /* ---------- 遮罩（拖放接收层、浮层背景） ---------- */
+  --veil: rgba(10, 10, 11, 0.74);
+
+  /* ---------- 媒体叠加层常量：两套主题共用，不随主题反转 ---------- */
+  --on-media-line: rgba(255, 255, 255, 0.9);
+  --on-media-line-soft: rgba(255, 255, 255, 0.5);
+  --media-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  --media-sheen: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   夜间主题（可选，参考图的暖调近黑 + 琥珀强调）
+   ============================================================ */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0a0a0b;
+  --bg-elev: #0e0e10;
+  --surface: #131316;
+  --surface-2: #17171b;
+  --surface-3: #1d1d22;
+  --inset: #0d0d0f;
+
+  --border: #24242a;
+  --border-2: #303038;
+  --border-3: #3d3d46;
+
+  --text: #ededee;
+  --text-2: #a2a2a9;
+  --text-3: #6d6d76;
+  --text-4: #4b4b53;
+
+  --accent: #e0a94e;
+  --accent-hi: #efbb66;
+  --accent-on: #1b1305;
+  --accent-soft: rgba(224, 169, 78, 0.10);
+  --accent-line: rgba(224, 169, 78, 0.55);
+
+  --fill: #e9e9ea;
+  --fill-on: #17171a;
+  --fill-hi: #ffffff;
+
+  --ok: #5fbd7c;
+  --ok-soft: rgba(95, 189, 124, 0.12);
+  --warn: #e0a94e;
+  --warn-soft: rgba(224, 169, 78, 0.12);
+  --danger: #e26860;
+  --danger-soft: rgba(226, 104, 96, 0.12);
+  --info: #74a7d9;
+  --info-soft: rgba(116, 167, 217, 0.12);
+
+  --thumb-a: #2a3a4a;
+  --thumb-b: #16202a;
+  --scroll: #2b2b32;
+  --on-media: #ffffff;
+  --on-media-veil: rgba(10, 10, 11, 0.72);
+}
+
+/* ============================================================
+   日间主题（同一套令牌换值，组件零改动）
+   ============================================================ */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f4f4f2;
+  --bg-elev: #ececeA;
+  --surface: #ffffff;
+  --surface-2: #f5f5f3;
+  --surface-3: #ececeA;
+  --inset: #fafaf8;
+
+  --border: #e2e2df;
+  --border-2: #d0d0cc;
+  --border-3: #b8b8b3;
+
+  --text: #1a1a1c;
+  --text-2: #4d4d52;
+  --text-3: #77777d;
+  --text-4: #a5a5aa;
+
+  --accent: #b8791a;
+  --accent-hi: #9c660f;
+  --accent-on: #fffaf0;
+  --accent-soft: rgba(184, 121, 26, 0.10);
+  --accent-line: rgba(184, 121, 26, 0.55);
+
+  --fill: #1f1f22;
+  --fill-on: #ffffff;
+  --fill-hi: #000000;
+
+  --ok: #2f8f4c;
+  --ok-soft: rgba(47, 143, 76, 0.10);
+  --warn: #b8791a;
+  --warn-soft: rgba(184, 121, 26, 0.10);
+  --danger: #b83f38;
+  --danger-soft: rgba(184, 63, 56, 0.10);
+  --info: #2f6a9e;
+  --info-soft: rgba(47, 106, 158, 0.10);
+
+  --thumb-a: #cfd8e0;
+  --thumb-b: #eef1f4;
+  --scroll: #d4d4d0;
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.14);
+  --veil: rgba(244, 244, 242, 0.78);
+  --on-media: #ffffff;
+  --on-media-veil: rgba(10, 10, 11, 0.72);
+}
+
+/* ---------- 通用工具类（对齐靠它们，不靠组件各自硬写） ---------- */
+.u-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.u-meta {
+  font-size: var(--f-xs);
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.u-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.u-right { text-align: right; }
+.u-center { text-align: center; }

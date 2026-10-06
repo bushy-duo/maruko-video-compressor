@@ -1,0 +1,34 @@
+{
+  "name": "maruko-toolbox",
+  "productName": "小丸工具箱",
+  "version": "1.2.7",
+  "description": "小丸工具箱 · 视频压缩与批量转码",
+  "main": "main.js",
+  "author": "maruko-redesign",
+  "license": "MIT",
+  "scripts": {
+    "predist": "node sync-renderer.js",
+    "start": "electron .",
+    "dist": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "cn.maruko.redesign",
+    "productName": "小丸工具箱",
+    "directories": { "output": "release-1.2.7" },
+    "electronLanguages": ["zh-CN", "en-US"],
+    "files": ["main.js", "preload.js", "renderer/**/*", "assets/**/*"],
+    "win": {
+      "target": [{ "target": "portable", "arch": ["x64"] }],
+      "icon": "assets/app.ico",
+      "signAndEditExecutable": false,
+      "forceCodeSigning": false
+    },
+    "portable": { "artifactName": "小丸工具箱-${version}.exe" },
+    "asar": true,
+    "compression": "normal"
+  }
+}

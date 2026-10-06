@@ -1,0 +1,31 @@
+# Workspace-only instructions and local/private data
+AGENTS.md
+**/AGENTS.md
+.publish-git/
+**/.env
+**/.env.*
+**/app_settings.json
+**/user_presets.json
+**/*.log
+
+# Python environments and build output
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/.packaging/
+**/build/
+**/dist/
+
+# Electron dependencies, local profiles and generated releases
+maruko-exe/node_modules/
+maruko-exe/.cache/
+maruko-exe/*-profile/
+maruko-exe/verification/
+maruko-exe/release-*/
+maruko-exe/icon-source.previous.png
+
+# Design drafts and local screenshots, not part of the runnable application
+ui-redesign/_shot_*.png
+ui-redesign/DESIGN.md
+ui-redesign/react-port/

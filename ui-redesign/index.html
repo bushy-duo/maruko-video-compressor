@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-fscale="mid">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小丸工具箱</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ 图标精灵（线性 1.6 描边，统一 24 网格） ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2.6 20.4 7v10L12 21.4 3.6 17V7z"/><path d="M9.4 9.6v4.8l4.4-2.4z"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.4h7A1.5 1.5 0 0 1 19 10v7.5A1.5 1.5 0 0 1 17.5 19h-13A1.5 1.5 0 0 1 3 17.5z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.8 19 12 7 19.2z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="6.5" width="11" height="11" rx="1.6"/></rect></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V5.2A1.2 1.2 0 0 1 10.7 4h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.8 12.1A1.5 1.5 0 0 0 8.8 20.5h6.4a1.5 1.5 0 0 0 1.5-1.4L17.5 7"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M12 3.2v2.1M12 18.7v2.1M20.8 12h-2.1M5.3 12H3.2M18.2 5.8l-1.5 1.5M7.3 16.7l-1.5 1.5M18.2 18.2l-1.5-1.5M7.3 7.3 5.8 5.8"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4.5M8 8.2 12 4.3l4 3.9M4.5 15v3.2A1.8 1.8 0 0 0 6.3 20h11.4a1.8 1.8 0 0 0 1.8-1.8V15"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.6 4.4 4.4L19 7.4"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.2 21 19.4H3zM12 10v4.2M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 11v5.4M12 7.9h.01"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1.6"/><path d="M10 3.6v3M14 3.6v3M10 17.4v3M14 17.4v3M3.6 10h3M3.6 14h3M17.4 10h3M17.4 14h3"/></symbol>
+  <symbol id="i-gpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="6.5" width="18.8" height="11" rx="1.8"/><circle cx="9" cy="12" r="2.6"/><circle cx="15.6" cy="12" r="1.4"/><path d="M6 17.5v2.2M18 17.5v2.2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.7c-2.7.6-3.3-1.3-3.3-1.3-.4-1.1-1-1.4-1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.5-1.1-4.5-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.3 4.6-4.5 4.9.4.3.7 1 .7 1.9v2.8c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 10 4 4 4-4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h8L18.5 8v12.5H6z"/><path d="M13.6 3.6V8.4h4.8M8.8 12.5h6.4M8.8 16h6.4"/></symbol>
+</svg>
+
+
+<div class="app">
+<header class="topbar"><div class="brand"><span class="brand-mark"><svg width="26" height="26"><use href="#i-logo"/></svg></span><span class="brand-name">小丸工具箱</span></div><div class="topbar-spacer"></div><button class="btn btn--icon" id="theme-toggle" data-act="toggleTheme" title="切换到夜间主题" aria-label="切换到夜间主题"><svg width="15" height="15"><use href="#i-moon"/></svg></button></header>
+<nav class="nav" aria-label="主导航"><div class="nav-tabs" role="tablist"><button class="nav-tab" role="tab" aria-selected="true" data-view="queue">视频压缩</button><button class="nav-tab" role="tab" aria-selected="false" data-view="video">压缩设置</button><button class="nav-tab" role="tab" aria-selected="false" data-view="bench">环境检测</button><button class="nav-tab" role="tab" aria-selected="false" data-view="settings">软件设置</button></div><div class="topbar-spacer"></div><button class="btn btn--sm" data-act="stopAll" hidden><svg width="13" height="13"><use href="#i-stop"/></svg>停止压缩</button></nav>
+<div class="workspace view qview" data-view="queue"><div class="qwrap">
+<div class="qbar queue-quickbar" id="queue-quickbar">
+<label class="quick-field"><span class="field-label">编码格式</span><div class="seg seg--auto" data-group="codec" id="queue-codec"></div></label>
+<label class="quick-field quick-field--cq"><span class="field-label">CQ</span><input class="slider" type="range" data-cq-slider min="16" max="35" step="1" value="24" aria-label="CQ" title="数值越小，画质越高"><input class="input input--num" type="number" data-cq-input data-bind="cq" min="16" max="35" step="1" value="24" aria-label="CQ 数值"></label>
+<label class="quick-field"><span class="field-label">分辨率</span><select class="input" id="queue-res-select" data-bind="res" aria-label="分辨率"><option value="原样">保持原尺寸</option><option value="2160p">4K · 2160p</option><option value="1440p">2K · 1440p</option><option value="1080p">1080p</option><option value="720p">720p</option><option value="竖4K">竖屏 4K</option><option value="竖1440">竖屏 1440p</option><option value="竖1080">竖屏 1080p</option><option value="竖720">竖屏 720p</option><option value="自定义">自定义</option></select></label>
+</div>
+<div class="qbar" id="queue-toolbar" hidden>
+<button class="btn" data-act="pickFiles"><svg width="14" height="14"><use href="#i-plus"/></svg>添加视频</button>
+<details class="queue-menu"><summary class="btn">更多</summary><div class="queue-menu-body">
+<button class="btn btn--sm" data-act="pickFolder">添加文件夹</button>
+<button class="btn btn--sm" data-act="removeSel" title="只移除任务，不删除原文件">移除选中<span id="sel-count" class="kbd-hint"></span></button>
+<button class="btn btn--sm btn--danger" data-act="clearAll">清空列表</button><label class="quick-purpose"><span>预设</span><select class="input" id="quick-preset" aria-label="压缩用途"><option value="" disabled>自定义设置</option><option value="H.265">均衡</option><option value="高兼容 H.264">兼容性优先</option><option value="高质量归档 H.265 4K">高画质 4K</option><option value="网盘归档 H.265 1080p">小体积 1080p</option><option value="极速体积压缩 H.265 720p">极小体积 720p</option></select></label></div></details>
+<span class="qbar-spacer"></span><button class="btn btn--accent" data-act="startAll" id="start-all"><svg width="14" height="14"><use href="#i-play"/></svg><span data-start-label>开始压缩</span></button>
+</div>
+<section class="card card--flush list-card">
+<div class="table-wrap" id="q-scroll">
+<table class="data qdata" id="queue-table" hidden><colgroup><col><col style="width:34%"><col style="width:200px"></colgroup><thead><tr><th>视频</th><th>输出文件</th><th class="r">状态</th></tr></thead><tbody id="q-body"></tbody></table>
+<div class="empty" id="q-empty"><div class="empty-title">选择要压缩的视频</div><button class="btn btn--accent" data-act="pickFiles"><svg width="14" height="14"><use href="#i-plus"/></svg>选择视频</button><div class="empty-sub">也可以拖入视频或文件夹</div><button class="btn btn--sm btn--ghost" data-act="pickFolder">选择文件夹</button></div>
+</div>
+<div class="canvas-foot" id="queue-footer" hidden><button class="btn btn--sm btn--ghost" data-act="gotoOutput" id="out-chip">保存到：原文件夹</button><span class="u-num" id="q-count"></span>
+<div class="queue-progress" id="queue-progress" hidden><div class="bar"><i id="q-bar" style="width:0%"></i></div><span class="u-num" id="q-pct">0%</span></div><span class="u-ellipsis" id="q-stat" role="status"></span>
+<span class="foot-tools"><button class="btn btn--sm btn--ghost" data-act="toggleLog" id="log-toggle" aria-expanded="false">运行记录<span class="u-num" id="log-n" hidden>0</span><svg width="12" height="12" class="rot"><use href="#i-chev"/></svg></button></span></div>
+</section>
+<section class="card card--flush logdrawer" id="log-drawer" hidden><div class="panel-head"><h2 class="panel-title">运行记录</h2><div class="panel-tools"><label class="switch-row"><span class="switch" role="switch" tabindex="0" aria-checked="true" data-switch="autoScroll"></span>自动滚动</label><button class="btn btn--sm" data-act="copyLog">复制</button><button class="btn btn--sm" data-act="exportLog">保存</button><button class="btn btn--sm" data-act="clearLog">清除</button></div></div><div class="log" id="log" role="log" aria-label="运行记录"></div></section>
+</div></div>
+<div class="workspace view simple-view" data-view="video" hidden>
+<div class="settings-column">
+<section class="card"><h2 class="panel-title page-card-title">格式与画质</h2><div class="stack"><div class="field field--inline"><span class="field-label">视频格式</span><div class="seg" data-group="codec" id="codec-seg"></div></div><p class="field-hint" id="enc-note" role="alert" hidden></p><div class="field" id="cq-slider-field"><span class="field-label">画质</span>
+            <input class="slider" type="range" id="cq-slider" data-cq-slider min="16" max="35" step="1" value="24">
+            <div class="slider-ticks"><span>更清晰</span><span>均衡</span><span>体积更小</span></div>
+          </div><label class="field field--inline"><span class="field-label">尺寸</span><select class="input" id="res-select" data-bind="res"><option value="原样">保持原尺寸</option><option value="2160p">4K · 2160p</option><option value="1440p">2K · 1440p</option><option value="1080p">1080p</option><option value="720p">720p</option><option value="竖4K">竖屏 4K</option><option value="竖1440">竖屏 1440p</option><option value="竖1080">竖屏 1080p</option><option value="竖720">竖屏 720p</option><option value="自定义">自定义</option></select></label><div class="field field--inline" id="custom-res" hidden>
+            <span class="field-label">宽 × 高</span>
+            <div class="input-group">
+              <input class="input input--num" type="text" id="custom-w" data-bind="customW" value="1920">
+              <span class="input-affix">×</span>
+              <input class="input input--num" type="text" id="custom-h" data-bind="customH" value="1080">
+            </div>
+          </div></div></section>
+<details class="card disclosure"><summary>编码器与速度</summary><div class="disclosure-body"><div class="field field--inline" id="cq-field">
+            <span class="field-label">CQ 数值</span>
+            <input class="input input--num" type="text" id="cq-input" data-cq-input data-bind="cq" value="24">
+          </div><div class="stack stack--loose">
+          <div class="field field--inline">
+            <span class="field-label">厂商</span>
+            <div class="seg" data-group="vendor">
+              <button>NVIDIA</button><button>AMD</button><button>Intel</button><button>CPU</button>
+            </div>
+          </div>
+          <div class="field field--inline">
+            <span class="field-label">格式</span>
+            <div class="seg" data-group="codec" id="codec-seg"></div>
+          </div>
+          <div class="field field--inline">
+            <span class="field-label">位深</span>
+            <div class="seg" data-group="depth">
+              <button>8-bit</button><button>10-bit</button>
+            </div>
+          </div>
+          
+        </div><div class="stack stack--loose">
+          <div class="field field--inline">
+            <span class="field-label">预设</span>
+            <div class="optgrid" style="--cols:4" data-group="preset">
+              <button>极速</button><button>高速</button><button>均衡</button><button>高画质</button>
+            </div>
+          </div>
+          <div class="field field--inline">
+            <span class="field-label">模式</span>
+            <div class="seg" data-group="qmode">
+              <button>恒定质量</button><button>两遍码率</button><button>自定义</button>
+            </div>
+          </div>
+          
+          
+          <div class="field field--inline" id="bitrate-field" hidden>
+            <span class="field-label">目标码率</span>
+            <div class="input-group">
+              <input class="input input--num" type="text" id="bitrate-input" data-bind="bitrate" value="8000k" placeholder="如 8000k">
+            </div>
+          </div>
+          <div class="field" id="cmd-field" hidden>
+            <span class="field-label">自定义命令</span>
+            <input class="input input--mono" type="text" id="cmd-input" data-bind="customCmd"
+                   value="-c:v hevc_nvenc -cq 24" placeholder="{input} {output}">
+            <span class="field-hint">用 {input} / {output} 占位，整条命令以此为准</span>
+          </div>
+        </div></div></details>
+<details class="card disclosure"><summary>画面处理</summary><div class="disclosure-body"><div class="stack">
+          <div class="field">
+            <span class="field-label">LUT 文件</span>
+            <div class="dropzone" id="lut-dz" tabindex="0" role="button">
+              <svg width="14" height="14"><use href="#i-upload"/></svg>
+              <span id="lut-text">拖入 .cube / .3dl，或点击选择</span>
+              <button class="btn btn--icon btn--sm" id="lut-clear" data-act="clearLut" hidden title="移除 LUT"><svg width="12" height="12"><use href="#i-x"/></svg></button>
+            </div>
+          </div>
+          <div class="field field--inline">
+            <span class="field-label">锐化</span>
+            <div class="optgrid" style="--cols:4" data-group="sharpen">
+              <button>关闭</button><button>轻度</button><button>中度</button><button>强力</button>
+            </div>
+          </div>
+          <div class="field field--inline">
+            <span class="field-label">倍速</span>
+            <div class="input-group">
+              <input class="input input--num" type="text" id="speed-input" data-bind="speed" value="1.00">
+              <button class="btn btn--icon btn--sm" data-act="resetSpeed" title="恢复 1.00"><svg width="12" height="12"><use href="#i-x"/></svg></button>
+            </div>
+          </div>
+          <div class="field field--inline">
+            <span class="field-label">隐藏水印</span>
+            <span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="watermark"></span>
+          </div>
+          <div class="field field--inline" id="wm-mode" hidden>
+            <span class="field-label">水印类型</span>
+            <div class="seg" data-group="wmmode">
+              <button>文字</button><button>图片</button>
+            </div>
+          </div>
+          <div class="field field--inline" id="wm-text-field" hidden>
+            <span class="field-label">水印文字</span>
+            <input class="input" type="text" id="wm-text" data-bind="wmText" placeholder="右下角不可见文字">
+          </div>
+          <div class="field field--inline" id="wm-img-field" hidden>
+            <span class="field-label">水印图片</span>
+            <div class="input-group">
+              <input class="input input--mono u-ellipsis" type="text" id="wm-img-name" readonly placeholder="选择 png / jpg">
+              <button class="btn btn--sm" data-act="pickWatermark">选择…</button>
+            </div>
+          </div>
+        </div></div></details>
+<div class="cta-row"><button class="btn" data-act="gotoQueue">回到视频列表</button><button class="btn btn--accent" data-act="startAll" id="start-btn"><svg width="14" height="14"><use href="#i-play"/></svg><span data-start-label>开始压缩</span></button><button class="btn" data-act="resetParams">重置</button></div>
+</div><div class="settings-column">
+<section class="card" id="output-settings"><h2 class="panel-title page-card-title">输出文件</h2><div class="stack"><div class="field field--inline">
+            <span class="field-label">位置</span>
+            <div class="seg" data-group="outmode">
+              <button>与源文件同目录</button><button>指定目录</button>
+            </div>
+          </div><div class="field" id="outdir-field" hidden>
+            <span class="field-label">输出目录</span>
+            <div class="input-group">
+              <input class="input input--mono" type="text" id="outdir-input" data-bind="outDir" value="D:\maru-output">
+              <button class="btn" data-act="browseOut">浏览…</button>
+            </div>
+          </div><label class="field field--inline"><span class="field-label">文件格式</span><select class="input" data-bind="mux"><option>MP4</option><option>MKV</option><option>MOV</option><option>WebM</option><option>TS</option><option value="源">与原文件相同</option></select></label></div>
+<details class="disclosure disclosure--inner"><summary>文件命名</summary><div class="disclosure-body stack"><div class="field field--inline">
+            <span class="field-label">文件名</span>
+            <div class="seg" data-group="naming">
+              <button>原名_标签</button><button>标签_原名</button><button>仅原名</button>
+            </div>
+          </div><div class="field field--inline">
+            <span class="field-label">同名冲突</span>
+            <div class="seg" data-group="conflict">
+              <button>重命名</button><button>覆盖</button><button>跳过</button>
+            </div>
+          </div></div></details></section>
+<details class="card disclosure"><summary>音频处理</summary><div class="disclosure-body"><div class="stack">
+          <div class="field">
+            <span class="field-label">处理方式</span>
+            <div class="optgrid" style="--cols:6" data-group="amode">
+              <button>复制</button><button>AAC</button><button>Opus</button><button>MP3</button><button>FLAC</button><button>移除</button>
+            </div>
+          </div>
+          <div class="field" id="abit-field">
+            <span class="field-label">码率</span>
+            <div class="optgrid" style="--cols:6" data-group="abit" id="abit-grid"></div>
+          </div>
+        </div></div></details>
+<details class="card disclosure"><summary>查看转码命令</summary><div class="disclosure-body"><pre class="cmdview" id="cmd-preview"></pre>
+        <div class="note note--warn" id="cmd-warn" hidden style="margin-top:var(--s-2)">
+          <svg><use href="#i-warn"/></svg><div id="cmd-warn-text"></div>
+        </div></div></details>
+</div></div>
+<div class="workspace view simple-view simple-view--env" data-view="bench" hidden>
+<section class="card"><h2 class="panel-title page-card-title">运行环境</h2><div class="stack"><div class="environment-status"><p id="env-status">正在检测…</p><button class="btn btn--sm" data-act="refreshEnv">重新检测</button></div><details class="card disclosure"><summary>查看设备信息</summary><div class="disclosure-body"><div class="stack">
+          <div class="set-row"><div class="set-label"><b>ffmpeg</b><span class="u-num u-ellipsis" id="env-ffmpeg">正在查找…</span></div><span class="badge" id="env-ffmpeg-b">检测中</span></div>
+          <div class="set-row"><div class="set-label"><b>ffprobe</b><span class="u-num u-ellipsis" id="env-ffprobe">正在查找…</span></div><span class="badge" id="env-ffprobe-b">检测中</span></div>
+          <div class="set-row"><div class="set-label"><b>NVENC 编码器</b><span id="env-nvenc-t">—</span></div><span class="badge" id="env-nvenc">检测中</span></div>
+          <div class="set-row"><div class="set-label"><b>AMF 编码器</b><span id="env-amf-t">—</span></div><span class="badge" id="env-amf">检测中</span></div>
+          <div class="set-row"><div class="set-label"><b>QSV 编码器</b><span id="env-qsv-t">—</span></div><span class="badge" id="env-qsv">检测中</span></div>
+          <div class="set-row"><div class="set-label"><b>CUDA 解码</b><span id="env-cuda-t">—</span></div><span class="badge" id="env-cuda">检测中</span></div>
+        </div><p class="field-hint" id="env-meta"></p><div class="stack" id="gpu-rows">
+          <p class="field-hint">正在读取显卡信息…</p>
+        </div>
+        <p class="field-hint" id="gpu-meta"></p></div></details></div></section>
+<details class="card disclosure" id="bench-test"><summary>测试编码速度</summary><div class="disclosure-body"><div class="stack">
+          <div class="field field--inline">
+            <span class="field-label">片源</span>
+            <div class="input-group">
+              <input class="input input--mono" type="text" id="bench-file" data-bind="benchFile" placeholder="选择一个测试视频">
+              <button class="btn btn--sm" data-act="pickBench">选择…</button>
+            </div>
+          </div>
+          <details class="card disclosure"><summary>选择参与测试的编码器</summary><div class="disclosure-body"><div class="field">
+            
+            <div class="btn-row">
+              <button class="btn btn--sm" data-act="benchPick" data-val="nvenc">NVIDIA</button>
+              <button class="btn btn--sm" data-act="benchPick" data-val="amf">AMD</button>
+              <button class="btn btn--sm" data-act="benchPick" data-val="qsv">Intel</button>
+              <button class="btn btn--sm" data-act="benchPick" data-val="all">全选</button>
+              <button class="btn btn--sm" data-act="benchPick" data-val="none">清除</button>
+              <span class="field-hint" id="bench-n"></span>
+            </div>
+            <div class="optgrid optgrid--wrap" style="--cols:4" id="benchenc"></div>
+          </div></div></details>
+          <div class="cta-row">
+            <button class="btn btn--accent" data-act="runBench" id="bench-start" style="flex:1 1 auto"><svg width="15" height="15"><use href="#i-play"/></svg>开始测试</button>
+            <button class="btn" data-act="exportCsv" hidden id="bench-export">导出 CSV</button>
+          </div>
+        </div><section class="card card--flush" id="bench-results" hidden>
+<div class="panel-head"><h2 class="panel-title">测试结果</h2><span class="badge" id="bench-badge">未开始</span><span class="field-hint" id="bench-sum"></span></div>
+<div class="table-wrap"><table class="data"><colgroup><col style="width:32%"><col style="width:16%"><col style="width:18%"><col style="width:18%"><col style="width:16%"></colgroup>
+<thead><tr><th>编码器</th><th>状态</th><th class="r">输出大小</th><th class="r">体积变化</th><th class="r">用时</th></tr></thead><tbody id="bench-body"></tbody></table><div id="bench-empty" hidden></div></div></section></div></details>
+</div>
+<div class="workspace view simple-view" data-view="settings" hidden>
+<div class="settings-column">
+<section class="card"><h2 class="panel-title page-card-title">外观</h2><div class="stack"><div class="set-row"><span class="set-label"><b>主题</b></span><div class="seg seg--sm" data-group="theme" style="width:auto"><button>日间</button><button>夜间</button><button>跟随</button></div></div><div class="set-row"><span class="set-label"><b>文字大小</b></span><div class="seg seg--sm" data-group="fscale" style="width:auto"><button>小</button><button>中</button><button>大</button></div></div></div></section>
+<details class="card disclosure"><summary>已保存预设</summary><div class="disclosure-body"><div class="btn-row"><span id="preset-count"></span><button class="btn" data-act="managePresets">管理预设</button></div></div></details>
+<div class="btn-row"><button class="btn btn--sm btn--danger" data-act="resetAll" title="保留任务、运行记录与已保存预设">恢复默认设置</button></div>
+</div>
+<div class="settings-column">
+<details class="card disclosure"><summary>压缩完成后</summary><div class="disclosure-body"><div class="stack"><div class="set-row"><span class="set-label"><b>打开输出文件夹</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="openAfter" aria-label="完成后打开文件夹"></span></div><div class="set-row"><span class="set-label"><b>播放提示音</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="sound" aria-label="结束提示音"></span></div><div class="set-row"><span class="set-label"><b>全部成功后关机</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="shutdown" aria-label="全部成功后关机"></span></div></div></div></details>
+<details class="card disclosure"><summary>更多设置</summary><div class="disclosure-body"><div class="stack"><div class="set-row"><span class="set-label"><b>默认设备</b></span><div class="seg seg--sm" data-group="prefdev" style="width:auto"><button>优先 GPU</button><button>优先 CPU</button></div></div><div class="set-row"><span class="set-label"><b>同时压缩</b></span><div class="seg seg--sm" data-group="parallel" style="width:auto"><button>1</button><button>2</button><button>3</button><button>4</button></div></div><div class="set-row"><span class="set-label"><b>优化批量编码</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="boostGpu" aria-label="优化批量编码"></span></div><div class="set-row"><span class="set-label"><b>开始前确认</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="confirmExport" aria-label="开始前确认"></span></div><div class="set-row"><span class="set-label"><b>弹窗居中</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="centerDialog" aria-label="弹窗居中"></span></div><div class="set-row" data-preview-only><span class="set-label"><b>失败自动回退</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="autoFallback" aria-label="失败自动回退"></span></div><div class="set-row"><span class="set-label"><b>编码线程数</b></span><input class="input input--num" type="text" id="set-threads" data-bind="threads" value="0" style="width:80px" title="0 表示自动选择"></div><div class="set-row"><span class="set-label"><b>附加参数</b><span class="u-num u-ellipsis" id="set-extra-text"></span></span><button class="btn btn--sm" data-act="editExtra">编辑</button></div><div class="set-row"><span class="set-label"><b>提示保存批量记录</b></span><span class="switch" role="switch" tabindex="0" aria-checked="false" data-switch="exportLogOn" aria-label="提示保存批量记录"></span></div></div></div></details>
+<details class="card disclosure"><summary>使用帮助</summary><div class="disclosure-body"><div class="stack"><div class="set-row"><span class="set-label"><b>使用方法</b></span><button class="btn btn--sm" data-act="openWizard">查看</button></div><div class="set-row"><span class="set-label"><b>项目主页</b></span><button class="btn btn--sm" data-act="openGithub">GitHub</button></div><div class="set-row"><span class="set-label"><b>版本</b></span><span class="u-num">1.2.7</span></div></div></div></details>
+</div></div>
+</div>
+<div class="drop-veil" id="drop-veil"><div class="drop-card"><svg><use href="#i-upload"/></svg><div class="drop-title">松手添加视频</div><div class="drop-count" id="drop-count"></div></div></div>
+<!-- ============ 轻提示 / 模态 / 隐藏文件选择 ============ -->
+<div class="toast" id="toast" role="status"><svg><use href="#i-info"/></svg><span id="toast-text"></span></div>
+<div class="modal-veil" id="modal-veil" hidden><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1"></div></div>
+<input type="file" id="file-input" multiple hidden
+  accept=".mp4,.mov,.mkv,.avi,.wmv,.flv,.webm,.m4v,.ts,.mts,.m2ts,.rm,.rmvb,.vob,.mpg,.mpeg">
+<input type="file" id="folder-input" webkitdirectory directory multiple hidden>
+<input type="file" id="lut-input" hidden accept=".cube,.3dl,.dat,.m3d">
+<input type="file" id="wm-input" hidden accept=".png,.jpg,.jpeg,.webp,.bmp">
+<input type="file" id="bench-input" hidden accept=".mp4,.mov,.mkv,.avi,.webm,.ts">
+
+<script src="app.js"></script>
+</body>
+</html>

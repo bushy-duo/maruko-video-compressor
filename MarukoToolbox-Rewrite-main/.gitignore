@@ -1,0 +1,39 @@
+﻿__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build artifacts
+build/
+dist/
+*.spec.bak
+
+# Runtime output
+output/
+data/app_settings.json
+
+# Logs and crash dumps
+*.log
+crash.log
+
+# Test and tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local packaging downloads
+.packaging/
+
+# IDE / OS files
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini

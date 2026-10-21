@@ -5,7 +5,7 @@
    命令数组由渲染层生成（与 ffmpeg_utils.build_compress_command 同构），
    这里只负责执行，不重复实现编码参数逻辑。
    ============================================================ */
-const { app, BrowserWindow, ipcMain, dialog, shell, webContents, nativeTheme } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell, webContents, nativeTheme } = require("electron");
 const { spawn, execFile } = require("child_process");
 const path = require("path");
 const fs = require("fs");
@@ -36,10 +36,14 @@ function which(name) {
   return null;
 }
 function toolPath(name) {
+  /* macOS 从访达启动时拿不到 shell 的 PATH，Homebrew 装的 ffmpeg 不在默认搜索路径里 */
+  const macDirs = process.platform === "darwin"
+    ? ["/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin"]
+    : [];
   const roots = [
     path.join(process.resourcesPath || "", "bin"),
     path.join(__dirname, "bin"),
-  ];
+  ].concat(macDirs);
   for (const r of roots) {
     const p = path.join(r, name + (process.platform === "win32" ? ".exe" : ""));
     try { if (fs.existsSync(p)) return p; } catch (e) { }
@@ -375,7 +379,10 @@ ipcMain.handle("sys:gpu", async () => {
 
 /* ---------- 关机（可撤销，默认关闭） ---------- */
 ipcMain.handle("sys:shutdown", async (_e, sec) => {
-  if (process.platform !== "win32") return { ok: false, error: "仅 Windows 支持" };
+  if (process.platform !== "win32") {
+    emit("log", { level: "warn", text: "自动关机仅支持 Windows，本批次已跳过该步骤" });
+    return { ok: false, error: "仅 Windows 支持" };
+  }
   const r = await run("shutdown", ["/s", "/t", String(sec || 20)], 8000);
   return { ok: r.code === 0, code: r.code };
 });
@@ -586,6 +593,52 @@ function e2eEncode(outFile) {
 }
 function os_tmpdir() { return require("os").tmpdir(); }
 
+/* ---------- macOS 应用菜单：补齐 Cmd+Q、复制粘贴等系统习惯 ---------- */
+function setupDarwinMenu() {
+  if (process.platform !== "darwin") return;
+  app.setAboutPanelOptions({
+    applicationName: "小丸工具箱",
+    applicationVersion: app.getVersion(),
+    version: app.getVersion(),
+    copyright: "MIT License · 社区版本",
+  });
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    {
+      label: "小丸工具箱",
+      submenu: [
+        { role: "about", label: "关于小丸工具箱" },
+        { type: "separator" },
+        { role: "hide", label: "隐藏小丸工具箱" },
+        { role: "hideOthers", label: "隐藏其他" },
+        { role: "unhide", label: "全部显示" },
+        { type: "separator" },
+        { role: "quit", label: "退出小丸工具箱" },
+      ],
+    },
+    {
+      label: "编辑",
+      submenu: [
+        { role: "undo", label: "撤销" },
+        { role: "redo", label: "重做" },
+        { type: "separator" },
+        { role: "cut", label: "剪切" },
+        { role: "copy", label: "复制" },
+        { role: "paste", label: "粘贴" },
+        { role: "selectAll", label: "全选" },
+      ],
+    },
+    {
+      label: "窗口",
+      submenu: [
+        { role: "minimize", label: "最小化" },
+        { role: "zoom", label: "缩放" },
+        { type: "separator" },
+        { role: "front", label: "前置全部窗口" },
+      ],
+    },
+  ]));
+}
+
 /* ---------- 窗口 ---------- */
 function createWindow() {
   const theme = readSettings()?.theme;
@@ -613,6 +666,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  setupDarwinMenu();
   if (process.argv.includes("--backend-selftest")) {
     const out = process.env.MARU_ST_OUT || path.join(app.getPath("temp"), "maruko-backend-selftest.json");
     backendSelftest(out);

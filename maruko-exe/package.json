@@ -8,8 +8,11 @@
   "license": "MIT",
   "scripts": {
     "predist": "node sync-renderer.js",
+    "sync": "node sync-renderer.js",
     "start": "electron .",
-    "dist": "electron-builder --win portable --x64"
+    "dist": "electron-builder --win portable --x64",
+    "dist:mac": "node sync-renderer.js && electron-builder --mac --arm64 --publish never --config.directories.output=release-1.2.7-mac",
+    "dist:mac:dir": "node sync-renderer.js && electron-builder --mac --arm64 --dir --publish never --config.directories.output=release-1.2.7-mac"
   },
   "devDependencies": {
     "electron": "^33.2.0",
@@ -20,7 +23,8 @@
     "productName": "小丸工具箱",
     "directories": { "output": "release-1.2.7" },
     "electronLanguages": ["zh-CN", "en-US"],
-    "files": ["main.js", "preload.js", "renderer/**/*", "assets/**/*"],
+    "files": ["main.js", "preload.js", "renderer/**/*", "assets/**/*", "!assets/icon.icns"],
+    "afterPack": "packaging/adhoc-sign.js",
     "win": {
       "target": [{ "target": "portable", "arch": ["x64"] }],
       "icon": "assets/app.ico",
@@ -28,6 +32,22 @@
       "forceCodeSigning": false
     },
     "portable": { "artifactName": "小丸工具箱-${version}.exe" },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["arm64"] },
+        { "target": "zip", "arch": ["arm64"] }
+      ],
+      "category": "public.app-category.video",
+      "icon": "assets/icon.icns",
+      "darkModeSupport": true,
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "artifactName": "小丸工具箱-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "小丸工具箱-${version}-${arch}.dmg"
+    },
     "asar": true,
     "compression": "normal"
   }

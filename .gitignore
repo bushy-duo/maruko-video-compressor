@@ -1,6 +1,7 @@
 # Workspace-only instructions and local/private data
 AGENTS.md
 **/AGENTS.md
+00_AgentWorkspace/
 .publish-git/
 **/.env
 **/.env.*
